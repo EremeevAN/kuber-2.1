@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-exchange
+  annotations:
+    container1: busybox
+    container2: multitool
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: PV
+  template:
+    metadata:
+      labels:
+        app: PV
+    spec:
+      containers:
+      - name: busybox
+        image: busybox:latest
+        command: ['sh', '-c', "until false; do date >> /data/netology.txt; sleep 5; done"] 
+        volumeMounts:
+        - name: file
+          mountPath: /data
+      - name: multitool
+        image: praqma/network-multitool:alpine-extra
+        command: ["/bin/sh", "-c"]
+        args: ["tail -f /data/netology.txt"]
+        volumeMounts:
+         - name: file
+           mountPath: /data
+      volumes:
+          - name: file
+            emptyDir: {}

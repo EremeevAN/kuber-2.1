@@ -1,0 +1,62 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local
+  hostPath:
+    path: /data 
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-pvc 
+spec:
+  volumeName: data
+  volumeMode: Filesystem
+  storageClassName: "local"
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi 
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-exchange-pvc
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: busybox 
+  template:
+    metadata:
+      labels:
+        app: busybox 
+    spec:
+      containers:
+      - name: busybox
+        image: busybox
+        command: ['sh', '-c', "until false; do date >> /data/netology.txt; sleep 5; done"] 
+        volumeMounts:
+        - name: data 
+          mountPath: /data 
+      - name: multitool
+        image: praqma/network-multitool:alpine-extra
+        command: ["/bin/sh", "-c"]
+        args: ["tail -f /data/netology.txt"] 
+        volumeMounts:
+        - name: data 
+          mountPath: /data 
+      volumes:
+      - name: data 
+        persistentVolumeClaim:
+          claimName: data-pvc 
