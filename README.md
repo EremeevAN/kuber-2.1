@@ -45,7 +45,7 @@ spec:
 
 вывод команды чтения файла (tail -f <имя общего файла>)
 
-![image](https://github.com/EremeevAN/kuber-2.1/blob/main/2.png)
+![image](https://github.com/EremeevAN/kuber-2.1/blob/main/2.1.png)
 
 ### Задание 2. PV, PVC
 
@@ -208,5 +208,6 @@ spec:
 ![image](https://github.com/EremeevAN/kuber-2.1/blob/main/8.png)
 
 Продемонстрировать, что контейнер multitool может читать данные из файла в смонтированной директории, в который busybox записывает данные каждые 5 секунд.
+
 
 ![image](https://github.com/EremeevAN/kuber-2.1/blob/main/9.png)
